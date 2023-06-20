@@ -19,19 +19,27 @@ function calcularMedia(notas) {
   return soma / notas.length;
 }
 
+const estudantesProcessados = estudantes
+  .map(estudante => ({
+    ...estudante,
+    media: calcularMedia(estudante.notas)
+  }))
+  .map(estudante => ({
+    ...estudante,
+    situacao: estudante.media >= 7 ? 'Aprovado' : 'Reprovado'
+  }))
+  .map(estudante => ({
+    ...estudante,
+    nomeCompleto: estudante.nome.toUpperCase()
+  }));
+
 const resultadoDiv = document.getElementById('resultado');
-
-for (let i = 0; i < estudantes.length; i++) {
-  const estudante = estudantes[i];
-  const media = calcularMedia(estudante.notas);
-  const situacao = media >= 7 ? 'Aprovado' : 'Reprovado';
-  const nomeCompleto = estudante.nome.toUpperCase();
-
+estudantesProcessados.forEach(estudante => {
   const estudanteInfo = document.createElement('p');
   estudanteInfo.innerHTML = `
-    <span>Nome:</span> ${nomeCompleto}<br>
-    <span>Média:</span> ${media}<br>
-    <span>Situação:</span> <span class="situacao-${situacao.toLowerCase()}">${situacao}</span>
+    <span>Nome:</span> ${estudante.nomeCompleto}<br>
+    <span>Média:</span> ${estudante.media}<br>
+    <span>Situação:</span> <span class="situacao-${estudante.situacao.toLowerCase()}">${estudante.situacao}</span>
   `;
   resultadoDiv.appendChild(estudanteInfo);
-}
+});
